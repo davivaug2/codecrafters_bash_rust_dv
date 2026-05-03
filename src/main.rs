@@ -17,7 +17,7 @@ fn main() {
                     println!("{}", output); //{:?} {:#?}
                }
                ["exit",..]  => exit(0),
-               _ =>  println!("{0}: command not found", input) // default for match
+               _ =>  println!("{0}: command not found", commands.join(" ")) // default for match
           }
 
      }
