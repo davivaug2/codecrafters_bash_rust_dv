@@ -4,6 +4,7 @@ use std::process::exit;
 //use std::io::Read;
 
 fn main() {
+     let predefined_commands = vec!["type","echo","exit"];
      loop {
           print!("$ ");
           io::stdout().flush().unwrap();
@@ -15,6 +16,12 @@ fn main() {
                ["echo", after @ ..] => {
                     let output = after.join(" ");
                     println!("{}", output); //{:?} {:#?}
+               }
+               ["type", second_command, after @ ..] => {
+                    if (predefined_commands.contains(second_command)){
+                         println!("{} is a shell builtin", second_command);
+                    }
+                    else { println!("{}: not found", second_command); }
                }
                ["exit",..]  => exit(0),
                _ =>  println!("{0}: command not found", commands.join(" ")) // default for match
