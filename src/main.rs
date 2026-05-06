@@ -11,7 +11,7 @@ fn read_env_os_string(key: &str)  ->  OsString   {
         Some(paths) => { //for path in env::split_paths(&paths) {//println!("'{}'", path.display())
             return paths; // env::var_os(input_key).map(|paths| env::split_paths(&paths).collect()).unwrap_or_default() }
         }
-        None => {println!("{key} is not defined in the environment.");
+        None => {//println!("{key} is not defined in the environment.");
             return OsString::new()
         }
     }
@@ -25,7 +25,7 @@ fn main() {
     let path_split_paths = env::split_paths(&path_dir_list_os_string);
     //println!("{:?}",tes);
     //println!("{:?}",paths_dir_list);
-    println!("{:?} Paths dir size",path_dir_list_os_string.len());
+    //println!("{:?} Paths dir size",path_dir_list_os_string.len());
     let predefined_commands = vec!["type","echo","exit"];
     loop {
         print!("$ ");
