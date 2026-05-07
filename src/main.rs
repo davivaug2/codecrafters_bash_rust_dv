@@ -58,8 +58,8 @@ fn main() {
                     println!("Arg #0 (program name): {}",commands[0]);
                     commands.iter().skip(1).enumerate().for_each(|(index,arg)|
                         println!("Arg #{}: {}",index+1,arg));// skip_while
-                    print!("{}", String::from_utf8_lossy(&output.stdout));
                      */
+                    print!("{}", String::from_utf8_lossy(&output.stdout));
                     //println!("stderr: {}", String::from_utf8_lossy(&output.stderr));//errors
                 }
             ["exit",..]  => exit(0),
