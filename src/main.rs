@@ -60,7 +60,7 @@ fn main() {
                          //metadata(path).unwrap().permissions().
                  })//
                     {
-                     println!("{} is {}", output, path_name.display());
+                     println!("{} is {}", output, path_name.join(second_command).display());
                         let fdfs =  std::fs::metadata(path_name).unwrap().permissions();
                     }
                  else { println!("{}: not found", second_command); };
