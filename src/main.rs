@@ -1,10 +1,12 @@
+use std::fs::exists;
 #[allow(unused_imports)]
 use std::io::{self, Write};
+use std::path::Path;
 use std::process::Command;
 use std::process::exit;
 use pathsearch;//use pathsearch::PathSearcher;
 fn main() -> Result<(), Box<dyn std::error::Error>> { //let args: Vec<String> = env::args().collect()
-    let predefined_commands = ["echo","pwd","type", "exit"]; //vec!["type", "echo", "exit"];
+    let predefined_commands = ["echo","pwd","cd","type", "exit"]; //vec!["type", "echo", "exit"];
     loop {
         print!("$ ");
         io::stdout().flush()?;// io::stdout().flush().unwrap() , ? encouraged more
@@ -19,8 +21,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> { //let args: Vec<String> = 
                 println!("{}", after.join(" ")); //  let output = _after.join(" ");//String better print
             }
             ["pwd", _after @ ..] => {
-                let path = std::env::current_dir()?;
-                println!("{}", path.display());//The current directory is 
+                //std::env::home_dir()
+                let path = std::env::current_dir()?; // env::getcwd().unwrap().to_str().unwrap());
+                println!("{}", path.display());//The current directory is.  // current_dir.to_str().unwrap()
+            }
+            ["cd", path_dir, _rest @ ..] => {
+                let os_string =std::ffi::OsString::from(path_dir);
+                let root = std::path::Path::new(&os_string);
+                // let canonical_dir = Path::canonicalize(root).unwrap();
+                if std::env::set_current_dir(&root).is_ok() {
+                }
+                else {println!("cd: {:?}: No such file or directory", path_dir)  }
+                    ;
+
+
+                ;
             }
             ["type", second_command, _after @ ..] => {
                 if predefined_commands.contains(second_command) {
@@ -47,7 +62,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> { //let args: Vec<String> = 
                 commands.iter().skip(1).enumerate().for_each(|(index,arg)|//println!("Arg #{}: {}",index+1,arg));// skip_while */
                 print!("{}", String::from_utf8_lossy(&output.stdout)); //println!("stderr: {}", String::from_utf8_lossy(&output.stderr));//errors
             }
-            ["exit", ..] => exit(0),
+            /*
+            FIX [spaces]  if !spaces.chars().any(|c| c != ' ')  => {
+                println!("sss");
+                continue;
+            }
+             */
+
+            ["exit",..] => exit(0),
             _ => println!("{0}: command not found", commands.join(" ")), // default for match
         } // match
     } //loop
@@ -99,6 +121,7 @@ let mut input: String = "".to_string();
 read var_os key 1 line
 // env::var_os(input_key).map(|paths| env::split_paths(&paths).collect()).unwrap_or_default() }
 ------
+
 Way to check Path Linux Specific.
 //use std::os::unix::fs::PermissionsExt;// Cannot find `Unix` in `os` [E0433]
 //`std_internals` is unstable [E0658]
