@@ -53,11 +53,13 @@ fn main() {
                         .output()
                         .expect("should be able to execute `/bin/cat`");//let output = Command::new(&commands[0]).args(&commands[1..]).output().unwrap();
                     assert!(output.status.success()); // println!("status: {}", output.status); //
+                    /*
                     println!("Program was passed {} args (including program name).",commands.len());
                     println!("Arg #0 (program name): {}",commands[0]);
                     commands.iter().skip(1).enumerate().for_each(|(index,arg)|
                         println!("Arg #{}: {}",index+1,arg));// skip_while
                     print!("{}", String::from_utf8_lossy(&output.stdout));
+                     */
                     //println!("stderr: {}", String::from_utf8_lossy(&output.stderr));//errors
                 }
             ["exit",..]  => exit(0),
