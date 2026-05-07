@@ -31,7 +31,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> { //let args: Vec<String> = 
                 // let canonical_dir = Path::canonicalize(root).unwrap();
                 if std::env::set_current_dir(&root).is_ok() {
                 }
-                else {println!("cd: {:?}: No such file or directory", path_dir)  }
+                else {println!("cd: {}: No such file or directory", path_dir)  }
                     ;
 
 
