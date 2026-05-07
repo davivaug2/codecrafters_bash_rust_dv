@@ -20,7 +20,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> { //let args: Vec<String> = 
             }
             ["pwd", _after @ ..] => {
                 let path = std::env::current_dir()?;
-                println!("The current directory is {}", path.display());
+                println!("{}", path.display());//The current directory is 
             }
             ["type", second_command, _after @ ..] => {
                 if predefined_commands.contains(second_command) {
