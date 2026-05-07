@@ -5,9 +5,9 @@ use std::process::exit;
 use std::env;
 use std::ffi::OsString;
 use std::fs::Permissions;
-
+use pathsearch::find_executable_in_path;
 //use std::fs;
-use std::os::unix::fs::PermissionsExt;// Cannot find `unix` in `os` [E0433]
+//use std::os::unix::fs::PermissionsExt;// Cannot find `unix` in `os` [E0433]
 //`std_internals` is unstable [E0658]
 
 //use std::path::PathBuf;
@@ -47,29 +47,22 @@ fn main() {
             ["echo", after @ ..] => {
                 println!("{}", after.join(" ")); //  let output = after.join(" ");//String better print
             }
-             ["type", second_command, after @ ..] => {
-                 let output = second_command;//after.join(" "); // after[0] // .iter().enumerate() finds inex then  then
-                 let output2 = OsString::from(&output);
-                 if (predefined_commands.contains(second_command)) {
-                     println!("{} is a shell builtin", second_command);
-// full_path.exists() == true ? same as full_path.exists()
-                 } else if let Some(path_name) = paths_v.iter().find(|path| {
-                     let full_path = path.join(second_command);
-                     full_path.exists()
-                         && std::fs::metadata(&full_path).unwrap().permissions().mode() & 0o111 != 0
-                         //metadata(path).unwrap().permissions().
-                 })//
-                    {
-                     println!("{} is {}", output, path_name.join(second_command).display());
-                        let fdfs =  std::fs::metadata(path_name).unwrap().permissions();
-                    }
-                 else { println!("{}: not found", second_command); };
-             }//type
+            ["type", second_command, after @ ..] => {
+                let output = second_command;//after.join(" "); // after[0] // .iter().enumerate() finds inex then  then
+                let output2 = OsString::from(&output);
+                if (predefined_commands.contains(second_command)) {
+                    println!("{} is a shell builtin", second_command);
+                // full_path.exists() == true ? same as full_path.exists()
+                } else if let Some(path_name) = pathsearch::find_executable_in_path(second_command) {
+                    println!("{} is {}", second_command, path_name.display());;
+                }
+                else { println!("{}: not found", second_command); };
+            }//type
             ["exit",..]  => exit(0),
             _ =>  println!("{0}: command not found", commands.join(" ")) // default for match
         }// match
-         }//loop
-     }//main
+    }//loop
+}//main
 
 
 
