@@ -18,7 +18,7 @@ fn main() { //let args: Vec<String> = env::args().collect()
             ["echo", after @ ..] => {
                 println!("{}", after.join(" ")); //  let output = after.join(" ");//String better print
             }
-            ["type", second_command, _] => {
+            ["type", second_command, after @ ..] => {
                 if predefined_commands.contains(second_command) {
                     println!("{} is a shell builtin", second_command); // full_path.exists() == true ? same as full_path.exists()
                 } else if let Some(exe_name_path) =
@@ -29,7 +29,7 @@ fn main() { //let args: Vec<String> = env::args().collect()
                     println!("{}: not found", second_command);
                 };
             } //type
-            [program_exe, _]
+            [program_exe, after @ ..]
                 if let Some(_exe_name_path) = pathsearch::find_executable_in_path(&program_exe) =>
             {
                 //println!("{:?} is an EXE", _exe_name_path.display());
