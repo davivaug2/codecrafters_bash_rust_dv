@@ -1,10 +1,16 @@
-use std::path::PathBuf;
+
 #[allow(unused_imports)]
 use std::io::{self, Write};
 use std::process::exit;
 use std::env;
 use std::ffi::OsString;
-use std::io::Read;
+use std::fs::Permissions;
+//use std::fs;
+//use std::os::unix::fs::PermissionsExt;// Cannot find `unix` in `os` [E0433]
+//`std_internals` is unstable [E0658]
+
+//use std::path::PathBuf;
+//use std::io::Read;
 
 fn read_env_os_string(key: &str)  ->  OsString   {
     match env::var_os(key) {
@@ -45,8 +51,10 @@ fn main() {
                  let output2 = OsString::from(&output);
                  if (predefined_commands.contains(second_command)) {
                      println!("{} is a shell builtin", second_command);
-                 } else if let Some(path_name) = paths_v.iter().find(|&path| {
-                     path.file_name() == Some(output2.as_os_str()) })
+                 } else if let Some(path_name) = paths_v.iter().find(|path| {
+                     path.file_name() == Some(output2.as_os_str())
+                         && !std::fs::metadata(path).unwrap().permissions().readonly()
+                 })
                     {
                      println!("{} is {}", output, path_name.display());
                     }
@@ -80,7 +88,7 @@ https://rust-book.cs.brown.edu
 https://doc.rust-lang.org
 https://docs.rs/
 https://github.com/rust-lang/rust
-
+https://doc.rust-lang.org/rust-by-example
 look into
 https://dev-doc.rust-lang.org/std/env/index.html
 
