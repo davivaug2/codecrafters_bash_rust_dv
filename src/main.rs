@@ -27,9 +27,10 @@ fn main() {
         let mut input = String::new();
         io::stdin().read_line(&mut input).unwrap();
         let inp_lower = input.to_lowercase();
-        let commands: Vec<&str> = inp_lower.trim().split_whitespace().collect();
-        let paths_v: Vec<_> = env::split_paths(&path_dir_list_os_string).collect();
-        match commands.as_slice() {
+        let commands: Vec<&str> = input.trim().split_whitespace().collect();
+        //let paths_v: Vec<_> = env::split_paths(&path_dir_list_os_string).collect();
+        let commands_lower: Vec<&str> = inp_lower.trim().split_whitespace().collect(); // For case-insensitive command matching, create lowercase version
+        match commands_lower.as_slice() {
             ["add",_] => {} // _ is 1 value
             ["echo", after @ ..] => {
                 println!("{}", after.join(" ")); //  let output = after.join(" ");//String better print
@@ -46,19 +47,19 @@ fn main() {
             [program_exe, arguments @ .. ] if let Some(exe_name_path) =  pathsearch::find_executable_in_path(&program_exe) =>
                 {
                 //println!("{:?} is a EXE", exe_name_path.display());
-                    let output = Command::new(program_exe)
-                        .args(arguments)
+
+                    let output = Command::new(&commands[0])
+                        .args(&commands[1..])
                         .output()
-                        .expect("should be able to execute `/bin/cat`");
-                    /*
-                     println!("status: {}", output.status); //
-                    println!("stdout: {}", String::from_utf8_lossy(&output.stdout));
-                    println!("stderr: {}", String::from_utf8_lossy(&output.stderr));
-                     */
-
-
-                    assert!(output.status.success());
-            }
+                        .expect("should be able to execute `/bin/cat`");//let output = Command::new(&commands[0]).args(&commands[1..]).output().unwrap();
+                    assert!(output.status.success()); // println!("status: {}", output.status); //
+                    println!("Program was passed {} args (including program name).",commands.len());
+                    println!("Arg #0 (program name): {}",commands[0]);
+                    commands.iter().skip(1).enumerate().for_each(|(index,arg)|
+                        println!("Arg #{}: {}",index+1,arg));// skip_while
+                    print!("{}", String::from_utf8_lossy(&output.stdout));
+                    //println!("stderr: {}", String::from_utf8_lossy(&output.stderr));//errors
+                }
             ["exit",..]  => exit(0),
             _ =>  println!("{0}: command not found", commands.join(" ")) // default for match
         }// match
@@ -95,6 +96,21 @@ https://dev-doc.rust-lang.org/std/env/index.html
 
 
 /*
+---------
+https://github.com/cc-code-examples/good-mole-331190/blob/main/src/main.rs
+other ways to get path useing args
+let mut input: String = "".to_string();
+        io::stdin().read_line(&mut input).unwrap();
+        input.pop();
+        let command: Vec<&str> = input.split(" ").collect();
+        if command[0] == "exit" {
+            break;
+        }
+        ... fn eval_command(command: &str, args: Vec<&str>) ... &args[0]
+        // rust ways to get env vars
+//  env::var("PATH") vs std::env::var("PATH").unwrap_or_default();  vs  env::var_os("PATH")
+// let lorem = env!("LOREM_IPSUM");
+-------------
 read var_os key 1 line
 // env::var_os(input_key).map(|paths| env::split_paths(&paths).collect()).unwrap_or_default() }
 ------
@@ -111,21 +127,10 @@ else if let Some(path_name) = paths_v.iter().find(|path| {
  println!("{} is {}", output, path_name.join(second_command).display());
     let fdfs =  std::fs::metadata(path_name).unwrap().permissions();
                     }
----------
-https://github.com/cc-code-examples/good-mole-331190/blob/main/src/main.rs
-other ways to get path useing args
-let mut input: String = "".to_string();
-        io::stdin().read_line(&mut input).unwrap();
-        input.pop();
-        let command: Vec<&str> = input.split(" ").collect();
-        if command[0] == "exit" {
-            break;
-        }
-        ... fn eval_command(command: &str, args: Vec<&str>) ... &args[0]
-        // rust ways to get env vars
-//  env::var("PATH") vs std::env::var("PATH").unwrap_or_default();  vs  env::var_os("PATH")
-// let lorem = env!("LOREM_IPSUM");
--------------
+-------
+
+
+
 
  */
 
