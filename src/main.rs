@@ -2,14 +2,14 @@
 use std::io::{self, Write};
 use std::process::Command;
 use std::process::exit;
-
-fn main() { //let args: Vec<String> = env::args().collect()
+use pathsearch;//use pathsearch::PathSearcher;
+fn main() -> Result<(), Box<dyn std::error::Error>> { //let args: Vec<String> = env::args().collect()
     let predefined_commands = ["type", "echo", "exit"]; //vec!["type", "echo", "exit"];
     loop {
         print!("$ ");
-        io::stdout().flush().unwrap();
+        io::stdout().flush()?;// io::stdout().flush().unwrap() , ? encouraged more
         let mut input = String::new();
-        io::stdin().read_line(&mut input).unwrap();
+        io::stdin().read_line(&mut input)?;//io::stdin().read_line(&mut input).unwrap(); ide use ?
         let inp_lower = input.to_lowercase();
         let commands: Vec<&str> = input.split_whitespace().collect();// input.trim().split_whitespace().collect() same
         let commands_lower: Vec<&str> = inp_lower.split_whitespace().collect(); // For case-insensitive command matching, create lowercase version
@@ -17,6 +17,10 @@ fn main() { //let args: Vec<String> = env::args().collect()
             // ["add", _] => {} // _ is 1 value at a position using match //[_,"add", _]
             ["echo", after @ ..] => {
                 println!("{}", after.join(" ")); //  let output = _after.join(" ");//String better print
+            }
+            ["pwd", _after @ ..] => {
+                let path = std::env::current_dir()?;
+                println!("The current directory is {}", path.display());
             }
             ["type", second_command, _after @ ..] => {
                 if predefined_commands.contains(second_command) {
@@ -61,7 +65,8 @@ https://stackoverflow.com/questions/24158114/what-are-the-differences-between-ru
 https://oneuptime.com/blog/post/2026-01-25-rust-match-expressions/view
 https://stackoverflow.com/questions/21011330/how-do-i-invoke-a-system-command-and-capture-its-output
 https://doc.rust-lang.org/std/process/struct.Command.html
-
+https://doc.rust-lang.org/std/env/fn.current_dir.html
+https://doc.rust-lang.org/std/env/index.html
 -------------
 general learning rust
 https://rust-book.cs.brown.edu
@@ -69,8 +74,7 @@ https://doc.rust-lang.org
 https://docs.rs/
 https://github.com/rust-lang/rust
 https://doc.rust-lang.org/rust-by-example
-look into
-https://dev-doc.rust-lang.org/std/env/index.html
+
 
  */
 
