@@ -4,7 +4,7 @@ use std::process::Command;
 use std::process::exit;
 use pathsearch;//use pathsearch::PathSearcher;
 fn main() -> Result<(), Box<dyn std::error::Error>> { //let args: Vec<String> = env::args().collect()
-    let predefined_commands = ["type", "echo", "exit"]; //vec!["type", "echo", "exit"];
+    let predefined_commands = ["echo","pwd","type", "exit"]; //vec!["type", "echo", "exit"];
     loop {
         print!("$ ");
         io::stdout().flush()?;// io::stdout().flush().unwrap() , ? encouraged more
