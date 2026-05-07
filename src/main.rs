@@ -14,11 +14,11 @@ fn main() { //let args: Vec<String> = env::args().collect()
         let commands: Vec<&str> = input.split_whitespace().collect();// input.trim().split_whitespace().collect() same
         let commands_lower: Vec<&str> = inp_lower.split_whitespace().collect(); // For case-insensitive command matching, create lowercase version
         match commands_lower.as_slice() {
-            ["add", _] => {} // _ is 1 value
+            // ["add", _] => {} // _ is 1 value at a position using match //[_,"add", _]
             ["echo", after @ ..] => {
-                println!("{}", after.join(" ")); //  let output = after.join(" ");//String better print
+                println!("{}", after.join(" ")); //  let output = _after.join(" ");//String better print
             }
-            ["type", second_command, after @ ..] => {
+            ["type", second_command, _after @ ..] => {
                 if predefined_commands.contains(second_command) {
                     println!("{} is a shell builtin", second_command); // full_path.exists() == true ? same as full_path.exists()
                 } else if let Some(exe_name_path) =
@@ -29,7 +29,7 @@ fn main() { //let args: Vec<String> = env::args().collect()
                     println!("{}: not found", second_command);
                 };
             } //type
-            [program_exe, after @ ..]
+            [program_exe, _after @ ..]
                 if let Some(_exe_name_path) = pathsearch::find_executable_in_path(&program_exe) =>
             {
                 //println!("{:?} is an EXE", _exe_name_path.display());
