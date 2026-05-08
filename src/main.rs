@@ -24,20 +24,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> { //let args: Vec<String> = 
                 let path = std::env::current_dir()?; // env::getcwd().unwrap().to_str().unwrap());
                 println!("{}", path.display());//The current directory is.  // current_dir.to_str().unwrap()
             }
-            ["cd", path_parts @ ..] => {
-                let path_dir = path_parts.join(" "); // could do just path_parts no @
-                if  path_dir =="~"{
-                    let home_dir = std::env::home_dir().unwrap_or_default(); // .unwrap().as_os_str()
-                    std::env::set_current_dir(&home_dir).unwrap_or_else(
-                        |_| println!("cd: {:?}: No Home directory found.",&home_dir));
-                }
-                else {
-                    std::env::set_current_dir(&path_dir).unwrap_or_else(
+            ["cd", path_parts @ ..] => { // could do just path_parts no @
+                let path_dir = path_parts.join(" ").replace("~", std::env::home_dir().unwrap_or_default().to_str().unwrap());// .unwrap().as_str()) doing alot to try to avoid unwrap
+                std::env::set_current_dir(&path_dir).unwrap_or_else(
                         |_a| println!("cd: {path_dir}: No such file or directory"));
-                }
-
-
-
             }
             ["type", second_command, _after @ ..] => {
                 if predefined_commands.contains(second_command) {
