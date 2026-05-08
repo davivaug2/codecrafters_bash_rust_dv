@@ -1,7 +1,6 @@
-use std::fs::exists;
 #[allow(unused_imports)]
 use std::io::{self, Write};
-use std::path::Path;
+//use std::path::Path; // use std::fs::exists;
 use std::process::Command;
 use std::process::exit;
 use pathsearch;//use pathsearch::PathSearcher;
@@ -25,17 +24,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> { //let args: Vec<String> = 
                 let path = std::env::current_dir()?; // env::getcwd().unwrap().to_str().unwrap());
                 println!("{}", path.display());//The current directory is.  // current_dir.to_str().unwrap()
             }
-            ["cd", path_dir, _rest @ ..] => {
-                let os_string =std::ffi::OsString::from(path_dir);
-                let root = std::path::Path::new(&os_string);
-                // let canonical_dir = Path::canonicalize(root).unwrap();
-                if std::env::set_current_dir(&root).is_ok() {
-                }
-                else {println!("cd: {}: No such file or directory", path_dir)  }
-                    ;
+            ["cd", path_parts @ ..] => {
+                let path_dir = path_parts.join(" ");
+                std::env::set_current_dir(&path_dir).unwrap_or_else(|_| println!("cd: {path_dir}: No such file or directory"));
 
 
-                ;
             }
             ["type", second_command, _after @ ..] => {
                 if predefined_commands.contains(second_command) {
@@ -104,19 +97,7 @@ https://doc.rust-lang.org/rust-by-example
 Cargo fmt
 cargo clippy
 ---------
-https://github.com/cc-code-examples/good-mole-331190/blob/main/src/main.rs
-other ways to get path using args
-let mut input: String = "".to_string();
-        io::stdin().read_line(&mut input).unwrap();
-        input.pop();
-        let command: Vec<&str> = input.split(" ").collect();
-        if command[0] == "exit" {
-            break;
-        }
-        ... fn eval_command(command: &str, args: Vec<&str>) ... &args[0]
-        // rust ways to get env vars
-//  env::var("PATH") vs std::env::var("PATH").unwrap_or_default();  vs  env::var_os("PATH")
-// let lorem = env!("LOREM_IPSUM");
+
 -------------
 read var_os key 1 line
 // env::var_os(input_key).map(|paths| env::split_paths(&paths).collect()).unwrap_or_default() }
