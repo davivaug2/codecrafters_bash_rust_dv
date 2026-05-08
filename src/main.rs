@@ -48,7 +48,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> { //let args: Vec<String> = 
                 let output = Command::new(commands[0])
                     .args(&commands[1..])
                     .output()
-                    .expect("should be able to execute `/bin/cat`"); //let output = Command::new(&commands[0]).args(&commands[1..]).output().unwrap();
+                    .expect("should be able to execute `"); //let output = Command::new(&commands[0]).args(&commands[1..]).output().unwrap();
                 assert!(output.status.success()); // println!("status: {}", output.status);
 
                 /* println!("Program was passed {} args (including program name).",commands.len());//println!("Arg #0 (program name): {}",commands[0]);
